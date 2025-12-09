@@ -14,11 +14,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.LEDS.LEDSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -37,6 +40,8 @@ public class RobotContainer
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve"));
 
+
+  public final LEDSubsystem m_LED = new LEDSubsystem(); 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
@@ -93,7 +98,15 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public RobotContainer()
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  private static final Pose2d AUTO_START_POSE = 
+   new Pose2d(2, 6, Rotation2d.fromDegrees(0));
+
+  private static final Pose2d STRAIGHT_POSE = 
+   new Pose2d(7, 6, Rotation2d.fromDegrees(0));
+
+    public RobotContainer()
   {
     // Configure the trigger bindings
     configureBindings();
@@ -168,11 +181,33 @@ public class RobotContainer
     } else
     {
       driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
+      // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
       driverXbox.rightBumper().onTrue(Commands.none());
+
+
+      //fix the one below, make LEDs go yellow when you hit the B button
+     // driverXbox.b().whileTrue(m_LED.setYellow()); 
+
+      //
+    //   driverXbox.b().onTrue(Commands.runOnce(m_LED::setBlue,m_LED)); 
+      driverXbox.b().onTrue(new InstantCommand(() -> m_LED.setRed()));
+      // driverXbox.a().onTrue(new InstantCommand(() -> m_LED.setLimeGreen())); 
+      driverXbox.x().onTrue(new InstantCommand(() -> m_LED.setBlue()));
+      driverXbox.y().onTrue(new InstantCommand(() -> m_LED.setYellow())); 
+
+      driverXbox.povUp()
+      .onTrue(Commands.runOnce(
+        () -> drivebase.resetOdometry(AUTO_START_POSE)
+      ));
+
+      driverXbox.povRight()
+      .onTrue(drivebase.driveToPose(STRAIGHT_POSE));
+
+      
+
     }
 
   }
