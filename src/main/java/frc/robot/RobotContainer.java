@@ -206,7 +206,10 @@ public class RobotContainer
       driverXbox.povRight()
       .onTrue(drivebase.driveToPose(STRAIGHT_POSE));
 
-      
+      driverXbox.povDown()
+      .whileTrue(
+      drivebase.aimAtTarget()
+      );
 
     }
 
