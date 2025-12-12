@@ -214,7 +214,10 @@ public class RobotContainer
       );
 
 
-      
+      driverXbox.povDown()
+      .whileTrue(
+      drivebase.aimAtTarget()
+      );
 
     }
 
