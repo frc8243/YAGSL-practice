@@ -24,6 +24,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.LEDS.LEDSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
+import java.util.Set;
+
 import swervelib.SwerveInputStream;
 
 /**
@@ -104,7 +106,7 @@ public class RobotContainer
    new Pose2d(2, 6, Rotation2d.fromDegrees(0));
 
   private static final Pose2d STRAIGHT_POSE = 
-   new Pose2d(7, 6, Rotation2d.fromDegrees(0));
+   new Pose2d(4, 4, Rotation2d.fromDegrees(90));
 
     public RobotContainer()
   {
@@ -204,7 +206,13 @@ public class RobotContainer
       ));
 
       driverXbox.povRight()
-      .onTrue(drivebase.driveToPose(STRAIGHT_POSE));
+      .onTrue(
+      Commands.defer(  
+      () -> drivebase.driveToPose(STRAIGHT_POSE),
+      Set.of(drivebase) //<--- wrap it in a Set
+       )
+      );
+
 
       
 
