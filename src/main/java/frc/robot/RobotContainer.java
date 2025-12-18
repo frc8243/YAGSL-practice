@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.LEDS.LEDSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -108,6 +109,7 @@ public class RobotContainer
   private static final Pose2d STRAIGHT_POSE = 
    new Pose2d(4, 4, Rotation2d.fromDegrees(90));
 
+   private final ArmSubsystem m_arm = new ArmSubsystem();
     public RobotContainer()
   {
     // Configure the trigger bindings
@@ -163,7 +165,8 @@ public class RobotContainer
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-
+      driverXbox.rightBumper().whileTrue(m_arm.setAngle(45.0));
+      driverXbox.leftBumper().whileTrue(m_arm.setAngle(90.0));
 //      driverXbox.b().whileTrue(
 //          drivebase.driveToPose(
 //              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
