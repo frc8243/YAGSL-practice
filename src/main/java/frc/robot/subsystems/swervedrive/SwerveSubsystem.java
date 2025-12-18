@@ -126,6 +126,9 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,
                                   new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
                                              Rotation2d.fromDegrees(0)));
+
+    swerveDrive.replaceSwerveModuleFeedforward(new SimpleMotorFeedforward(0,2.40, 1.61));                                          
+
   }
 
   /**
@@ -274,7 +277,7 @@ drive(new ChassisSpeeds(0, 0, rotationSpeed));
   {
 // Create the constraints to use while pathfinding
     PathConstraints constraints = new PathConstraints(
-      swerveDrive.getMaximumChassisVelocity(), 1.0,
+      swerveDrive.getMaximumChassisVelocity()/4, 4.0,
         swerveDrive.getMaximumChassisAngularVelocity(), Units.degreesToRadians(720));
 
 // Since AutoBuilder is configured, we can use it to build pathfinding commands

@@ -107,7 +107,7 @@ public class RobotContainer
    new Pose2d(2, 6, Rotation2d.fromDegrees(0));
 
   private static final Pose2d STRAIGHT_POSE = 
-   new Pose2d(4, 4, Rotation2d.fromDegrees(90));
+   new Pose2d(6.6, 4, Rotation2d.fromDegrees(90));
 
    private final ArmSubsystem m_arm = new ArmSubsystem();
     public RobotContainer()
@@ -165,8 +165,8 @@ public class RobotContainer
       driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
-      driverXbox.rightBumper().whileTrue(m_arm.setAngle(45.0));
-      driverXbox.leftBumper().whileTrue(m_arm.setAngle(90.0));
+ //     driverXbox.rightBumper().whileTrue(m_arm.setAngle(45.0));
+   //   driverXbox.leftBumper().whileTrue(m_arm.setAngle(90.0));
 //      driverXbox.b().whileTrue(
 //          drivebase.driveToPose(
 //              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
@@ -189,13 +189,14 @@ public class RobotContainer
       // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.rightBumper().onTrue(Commands.none());
+      //driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+     // driverXbox.rightBumper().onTrue(Commands.none());
 
 
       //fix the one below, make LEDs go yellow when you hit the B button
      // driverXbox.b().whileTrue(m_LED.setYellow()); 
-
+     driverXbox.rightBumper().whileTrue(m_arm.setAngle(79.0));
+     driverXbox.leftBumper().whileTrue(m_arm.setAngle(39.0));
       //
     //   driverXbox.b().onTrue(Commands.runOnce(m_LED::setBlue,m_LED)); 
       driverXbox.b().onTrue(new InstantCommand(() -> m_LED.setRed()));
@@ -216,11 +217,23 @@ public class RobotContainer
        )
       );
 
-
       driverXbox.povDown()
-      .whileTrue(
-      drivebase.aimAtTarget()
+      .onTrue(Commands.runOnce(
+        () -> drivebase.resetOdometry(STRAIGHT_POSE)
+      ));
+
+      driverXbox.povLeft()
+      .onTrue(
+      Commands.defer(  
+      () -> drivebase.driveToPose(AUTO_START_POSE),
+      Set.of(drivebase) //<--- wrap it in a Set
+       )
       );
+
+      // driverXbox.povDown()
+      // .whileTrue(
+      // drivebase.aimAtTarget()
+      // );
 
     }
 

@@ -40,8 +40,8 @@ public class ArmSubsystem extends SubsystemBase {
   private SmartMotorControllerConfig smcConfig = new SmartMotorControllerConfig(this)
   .withControlMode(ControlMode.CLOSED_LOOP)
   // Feedback Constants (PID Constants)
-  .withClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
-  .withSimClosedLoopController(50, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withClosedLoopController(25, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
+  .withSimClosedLoopController(25, 0, 0, DegreesPerSecond.of(90), DegreesPerSecondPerSecond.of(45))
   // Feedforward Constants
   .withFeedforward(new ArmFeedforward(0, 0, 0))
   .withSimFeedforward(new ArmFeedforward(0, 0, 0))
@@ -69,9 +69,9 @@ public class ArmSubsystem extends SubsystemBase {
   // Hard limit is applied to the simulation.
   .withHardLimit(Degrees.of(-10), Degrees.of(100))
   // Starting position is where your arm starts
-  .withStartingPosition(Degrees.of(90))
+  .withStartingPosition(Degrees.of(59))
   // Length and mass of your arm for sim.
-  .withLength(Feet.of(1.1))
+  .withLength(Feet.of(2))
   .withMass(Pounds.of(1))
   // Telemetry name and verbosity for the arm.
   .withTelemetry("Arm", TelemetryVerbosity.HIGH);

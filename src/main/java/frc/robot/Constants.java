@@ -50,6 +50,6 @@ public final class Constants
   }
 
   public static class ArmConstants{
-    public static final String[] gearbox = {"5:1"}; //gear ratio
+    public static final String[] gearbox = {"125:1"}; //gear ratio
   }
 }
