@@ -126,6 +126,9 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,
                                   new Pose2d(new Translation2d(Meter.of(2), Meter.of(0)),
                                              Rotation2d.fromDegrees(0)));
+
+    swerveDrive.replaceSwerveModuleFeedforward(new SimpleMotorFeedforward(0,2.40, 1.61));                                          
+
   }
 
   /**
